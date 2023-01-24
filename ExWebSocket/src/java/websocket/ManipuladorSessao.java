@@ -15,6 +15,23 @@ public class ManipuladorSessao {
     
     public void adicionarSessao(Session e){
         sessoes.add(e);
+
+        //Precisa ser testada, provavelmente incorreta
+        /*
+        JsonProvider jp = JsonProvider.provider();
+        JsonObject jo = jp.createObjectBuilder().add("acao", "comentarioAdicionado").add("descricao", c.getDescricao()).build();
+
+        for(int i=0;i<comentarios.size();i++){
+            System.out.println("Sessao " + i + ", novo comentario: " + comentario.get(i).getDescricao());
+
+            try{
+                comentarios.get(i).getBasicRemote().sendText(jo.toString());
+            }
+            catch(IOException e) {
+                e.printStackTrace();
+            }
+
+        }*/
     }
     
     public void removerSessao(Session s){
@@ -23,6 +40,20 @@ public class ManipuladorSessao {
     
     public void adicionarComentario(Comentario c){
         comentarios.add(c);
+        JsonProvider jp = JsonProvider.provider();
+        JsonObject jo = jp.createObjectBuilder().add("acao", "comentarioAdicionado").add("descricao", c.getDescricao()).build();
+
+        for(int i=0;i<sessoes.size();i++){
+            System.out.println("Sessao " + i + ", novo comentario: " + c.getDescricao());
+
+            try{
+                sessoes.get(i).getBasicRemote().sendText(jo.toString());
+            }
+            catch(IOException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
     
     public void removerComentario(Comentario c){

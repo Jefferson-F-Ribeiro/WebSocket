@@ -17,16 +17,16 @@ import javax.websocket.server.ServerEndpoint;
 public class ServidorWebSocket {
     
     @Inject
-    private ManipuladorSessao se;
+    private ManipuladorSessao ms;
     
     @OnOpen
     public void abrir(Session s){
-        se.adicionarSessao(s);
+        ms.adicionarSessao(s);
     }
     
     @OnClose
     public void fechar(Session s){
-        se.removerSessao(s);
+        ms.removerSessao(s);
     }
     
     @OnError
@@ -36,6 +36,14 @@ public class ServidorWebSocket {
     
     @OnMessage
     public void mensagem(String m, Session s){
-    
+        System.out.println("Nova mensagem");
+        try(JsonReader jr = Json.createReader(new StringReader(m))){
+            JsonObject jo = jr.readObject();
+            if(jo.getString("acao").equals("adicionar")){
+                Comentario c = new Comentario();
+                c.setDescricao(jo.getString("descricao"));
+                ms.adicionarComentario();
+            }
+        }
     }
 }
